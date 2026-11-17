@@ -6,6 +6,7 @@
 // Replies use marker 0x72 directly after the report ID and carry no leading checksum.
 
 #include <algorithm>
+#include <cstddef>
 #include <cstdint>
 #include <vector>
 
@@ -18,7 +19,7 @@ constexpr uint8_t kTargetDongle = 0;
 constexpr uint8_t kTargetMouse = 1;
 constexpr uint8_t kBatteryCommand = 0x07;
 constexpr uint8_t kChargingCommand = 0x0F;
-constexpr size_t kReportSize = 64;
+constexpr std::size_t kReportSize = 64;
 
 // Build a complete HID output report. paramLength and commandLength are part
 // of the vendor frame header; the battery query uses (2, 1), target mouse.
@@ -32,7 +33,7 @@ inline std::vector<uint8_t> BuildFrame(uint8_t command, uint8_t paramLength,
     report[6] = command;
     report[7] = commandLength;
     unsigned sum = 0;
-    for (size_t i = 2; i < report.size(); ++i) sum += report[i];
+    for (std::size_t i = 2; i < report.size(); ++i) sum += report[i];
     report[1] = static_cast<uint8_t>(sum & 0xFF);
     return report;
 }
@@ -43,13 +44,13 @@ inline bool DecodeReply(const std::vector<uint8_t>& raw, uint8_t command,
                         std::vector<uint8_t>& payload) {
     payload.clear();
     if (raw.empty()) return false;
-    size_t offset = raw[0] == kReportId ? 1 : 0;
+    std::size_t offset = raw[0] == kReportId ? 1 : 0;
     if (raw.size() < offset + 7) return false;
     const uint8_t* frame = raw.data() + offset;
-    const size_t size = raw.size() - offset;
+    const std::size_t size = raw.size() - offset;
     if (frame[0] != kMarker || frame[1] == kEventStatus ||
         frame[1] == 0xFF || frame[4] != command) return false;
-    const size_t length = std::min<size_t>(frame[5], size - 6);
+    const std::size_t length = std::min<size_t>(frame[5], size - 6);
     payload.assign(frame + 6, frame + 6 + length);
     return true;
 }
