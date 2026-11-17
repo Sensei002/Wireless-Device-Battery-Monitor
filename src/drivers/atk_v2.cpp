@@ -32,6 +32,10 @@ void PollAtkV2(PollContext& ctx) {
              return c.iface == 2 && c.page() == 0xFF05 && c.usage() == 0x0001 &&
                     c.inLen() == AtkV2::kReportSize && c.outLen() == AtkV2::kReportSize;
          })) {
+        // Claim this receiver as soon as its 0xff05 interface is identified. If the
+        // new protocol does not answer (for example, the mouse is asleep), never
+        // fall through and send legacy 17-byte Kysona commands to its vendor HID interfaces.
+        ctx.Claim(kVid, kPid);
         HidDev dev;
         if (!dev.Open(*collection)) continue;
 
