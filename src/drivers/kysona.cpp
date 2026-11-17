@@ -60,6 +60,9 @@ void PollKysona(PollContext& ctx) {
     std::vector<std::wstring> seenNames;
     for (USHORT vendor : { (USHORT)0x3554, (USHORT)0x373B, (USHORT)0x3770, (USHORT)0x33E4, (USHORT)0x3710 }) {
         for (auto [vid, pid] : ctx.Products(vendor)) {
+            // The NK NANO receiver uses the separate 64-byte FF05 protocol.
+            // Never send the legacy 17-byte Kysona frame to this interface.
+            if (vid == 0x373B && pid == 0x1216) continue;
             // Kysona exposes a dedicated 17-byte collection; ATK / VXE receivers put report 08 in a
             // vendor collection that also carries larger reports. The checksummed reply filters out
             // anything that does not speak this protocol.

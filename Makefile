@@ -28,6 +28,6 @@ test:
 	$(CXX) -std=c++17 -O2 -Wall tests/rapoo_protocol_test.cpp -o build/rapoo_protocol_test.exe
 	./build/rapoo_protocol_test.exe
 	$(CXX) $(CXXFLAGS) tests/rapoo_driver_test.cpp src/drivers/rapoo.cpp -o build/rapoo_driver_test.exe
-	./build/rapoo_driver_test.exe
+	./build/rapoo_driver_test.exe\n\t$(CXX) -std=c++17 -O2 -Wall tests/atk_v2_protocol_test.cpp -o build/atk_v2_protocol_test.exe\n\t./build/atk_v2_protocol_test.exe
 
 .PHONY: clean test
