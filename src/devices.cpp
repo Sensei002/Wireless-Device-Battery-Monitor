@@ -13,7 +13,7 @@ std::vector<DeviceStatus> PollAllDevices() {
     PollGlorious(ctx);
     PollAula(ctx);       // before Kysona, which shares the 3554 vendor id and would probe it first
     PollAtkSerial(ctx);  // before Kysona, which shares the ATK vendor id
-    PollKysona(ctx);
+    PollVxeNk(ctx);\n    PollKysona(ctx);
     PollKeychron(ctx);
     PollLamzu(ctx);
     PollRongyuan(ctx);
